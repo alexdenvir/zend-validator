@@ -149,4 +149,22 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
             );
         }
     }
+
+    public function testIsValidWithDefaultOptions()
+    {
+        $validator = new Between();
+
+        $this->assertTrue($validator->isValid(0));
+        $this->assertTrue($validator->isValid(PHP_INT_MAX));
+
+        $validator = new Between(['inclusive' => false]);
+
+        $this->assertFalse($validator->isValid(0));
+        $this->assertFalse($validator->isValid(PHP_INT_MAX));
+
+        $validator = new Between(1, 10000);
+        
+        $this->assertFalse($validator->isValid(0));
+        $this->assertFalse($validator->isValid(PHP_INT_MAX));
+    }
 }
