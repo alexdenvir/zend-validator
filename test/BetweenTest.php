@@ -163,7 +163,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validator->isValid(PHP_INT_MAX));
 
         $validator = new Between(1, 10000);
-        
+
         $this->assertFalse($validator->isValid(0));
         $this->assertFalse($validator->isValid(PHP_INT_MAX));
     }
