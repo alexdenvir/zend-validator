@@ -64,7 +64,13 @@ class Between extends AbstractValidator
         }
         if (!is_array($options)) {
             $options = func_get_args();
-            $temp['min'] = array_shift($options);
+
+            $temp = [];
+
+            if (!empty($options)) {
+                $temp['min'] = array_shift($options);
+            }
+
             if (!empty($options)) {
                 $temp['max'] = array_shift($options);
             }

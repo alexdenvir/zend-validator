@@ -108,8 +108,29 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
      */
     public function testUsingDefaultValues()
     {
+        $defaults = [
+            'min' => 0,
+            'max' => PHP_INT_MAX,
+            'inclusive' => true
+        ];
+
+        $validator = new Between();
+
+        $this->assertSame($defaults['min'], $validator->getMin());
+        $this->assertSame($defaults['max'], $validator->getMax());
+        $this->assertSame($defaults['inclusive'], $validator->getInclusive());
+
+        $this->assertAttributeEquals(
+            [
+                'min' => $defaults['min'],
+                'max' => $defaults['max'],
+                'inclusive' => $defaults['inclusive']
+            ],
+            'options',
+            $validator
+        );
+
         $optionSets = [
-            null,
             ['min' => 25],
             ['max' => 50],
             ['inclusive' => false],
@@ -117,12 +138,6 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
             ['min' => 25, 'inclusive' => false],
             ['max' => 50, 'inclusive' => false],
             ['min' => 25, 'max' => 50, 'inclusive' => false]
-        ];
-
-        $defaults = [
-            'min' => 0,
-            'max' => PHP_INT_MAX,
-            'inclusive' => true
         ];
 
         foreach ($optionSets as $options) {
@@ -134,9 +149,9 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
 
             $validator = new Between($options);
 
-            $this->assertEquals($expected['min'], $validator->getMin());
-            $this->assertEquals($expected['max'], $validator->getMax());
-            $this->assertEquals($expected['inclusive'], $validator->getInclusive());
+            $this->assertSame($expected['min'], $validator->getMin());
+            $this->assertSame($expected['max'], $validator->getMax());
+            $this->assertSame($expected['inclusive'], $validator->getInclusive());
 
             $this->assertAttributeEquals(
                 [
@@ -153,7 +168,10 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
     public function testIsValidWithDefaultOptions()
     {
         $validator = new Between();
+        $this->assertSame(0, $validator->getMin());
+        $this->assertSame(PHP_INT_MAX, $validator->getMax());
 
+        $this->assertFalse($validator->isValid((int) -1));
         $this->assertTrue($validator->isValid(0));
         $this->assertTrue($validator->isValid(PHP_INT_MAX));
 
