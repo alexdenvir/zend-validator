@@ -56,8 +56,6 @@ class Between extends AbstractValidator
      *   'inclusive' => boolean, inclusive border values
      *
      * @param  array|Traversable $options
-     *
-     * @throws Exception\InvalidArgumentException
      */
     public function __construct($options = null)
     {
