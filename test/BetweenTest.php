@@ -103,22 +103,6 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($validator->getOption('messageVariables'), 'messageVariables', $validator);
     }
 
-    /**
-     * @covers Zend\Validator\Between::__construct()
-     * @dataProvider constructBetweenValidatorInvalidDataProvider
-     *
-     * @param array $args
-     */
-    public function testMissingMinOrMax(array $args)
-    {
-        $this->setExpectedException(
-            'Zend\Validator\Exception\InvalidArgumentException',
-            "Missing option. 'min' and 'max' have to be given"
-        );
-
-        new Between($args);
-    }
-
     public function constructBetweenValidatorInvalidDataProvider()
     {
         return [
