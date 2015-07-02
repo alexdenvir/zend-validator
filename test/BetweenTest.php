@@ -103,15 +103,50 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($validator->getOption('messageVariables'), 'messageVariables', $validator);
     }
 
-    public function constructBetweenValidatorInvalidDataProvider()
+    /**
+     * Tests default options are correct with different
+     */
+    public function testUsingDefaultValues()
     {
-        return [
-            [
-                ['min' => 1],
-            ],
-            [
-                ['max' => 5],
-            ],
+        $optionSets = [
+            null,
+            ['min' => 25],
+            ['max' => 50],
+            ['inclusive' => false],
+            ['min' => 25, 'max' => 50],
+            ['min' => 25, 'inclusive' => false],
+            ['max' => 50, 'inclusive' => false],
+            ['min' => 25, 'max' => 50, 'inclusive' => false]
         ];
+
+        $defaults = [
+            'min' => 0,
+            'max' => PHP_INT_MAX,
+            'inclusive' => true
+        ];
+
+        foreach ($optionSets as $options) {
+            if (!is_array($options)) {
+                $expected = $defaults;
+            } else {
+                $expected = array_merge($defaults, $options);
+            }
+
+            $validator = new Between($options);
+
+            $this->assertEquals($expected['min'], $validator->getMin());
+            $this->assertEquals($expected['max'], $validator->getMax());
+            $this->assertEquals($expected['inclusive'], $validator->getInclusive());
+
+            $this->assertAttributeEquals(
+                [
+                    'min' => $expected['min'],
+                    'max' => $expected['max'],
+                    'inclusive' => $expected['inclusive']
+                ],
+                'options',
+                $validator
+            );
+        }
     }
 }
