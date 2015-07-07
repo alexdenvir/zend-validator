@@ -154,7 +154,6 @@ class StaticValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteValidWithParameters()
     {
-        $this->assertTrue(StaticValidator::execute(5, 'Between', [1, 10]));
         $this->assertTrue(StaticValidator::execute(5, 'Between', ['min' => 1, 'max' => 10]));
     }
 }

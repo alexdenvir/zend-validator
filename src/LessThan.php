@@ -66,7 +66,12 @@ class LessThan extends AbstractValidator
         }
         if (!is_array($options)) {
             $options = func_get_args();
-            $temp['max'] = array_shift($options);
+
+            $temp = [];
+
+            if (!empty($options)) {
+                $temp['max'] = array_shift($options);
+            }
 
             if (!empty($options)) {
                 $temp['inclusive'] = array_shift($options);
@@ -75,16 +80,9 @@ class LessThan extends AbstractValidator
             $options = $temp;
         }
 
-        if (!array_key_exists('max', $options)) {
-            throw new Exception\InvalidArgumentException("Missing option 'max'");
-        }
-
         if (!array_key_exists('inclusive', $options)) {
             $options['inclusive'] = false;
         }
-
-        $this->setMax($options['max'])
-             ->setInclusive($options['inclusive']);
 
         parent::__construct($options);
     }
@@ -142,15 +140,19 @@ class LessThan extends AbstractValidator
      */
     public function isValid($value)
     {
+        if (is_null($this->getMax())) {
+            throw new Exception\InvalidArgumentException("Missing option 'max'");
+        }
+
         $this->setValue($value);
 
-        if ($this->inclusive) {
-            if ($value > $this->max) {
+        if ($this->getInclusive()) {
+            if ($value > $this->getMax()) {
                 $this->error(self::NOT_LESS_INCLUSIVE);
                 return false;
             }
         } else {
-            if ($value >= $this->max) {
+            if ($value >= $this->getMax()) {
                 $this->error(self::NOT_LESS);
                 return false;
             }

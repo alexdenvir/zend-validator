@@ -48,7 +48,7 @@ class Regex extends AbstractValidator
      * @param  string|Traversable $pattern
      * @throws Exception\InvalidArgumentException On missing 'pattern' parameter
      */
-    public function __construct($pattern)
+    public function __construct($pattern = null)
     {
         if (is_string($pattern)) {
             $this->setPattern($pattern);
@@ -60,16 +60,11 @@ class Regex extends AbstractValidator
             $pattern = ArrayUtils::iteratorToArray($pattern);
         }
 
-        if (!is_array($pattern)) {
-            throw new Exception\InvalidArgumentException('Invalid options provided to constructor');
+        if (is_array($pattern) && array_key_exists('pattern', $pattern)) {
+            $this->setPattern($pattern['pattern']);
+            unset($pattern['pattern']);
         }
 
-        if (!array_key_exists('pattern', $pattern)) {
-            throw new Exception\InvalidArgumentException("Missing option 'pattern'");
-        }
-
-        $this->setPattern($pattern['pattern']);
-        unset($pattern['pattern']);
         parent::__construct($pattern);
     }
 
@@ -116,6 +111,10 @@ class Regex extends AbstractValidator
      */
     public function isValid($value)
     {
+        if (is_null($this->getPattern())) {
+            throw new Exception\InvalidArgumentException("Missing option 'pattern'");
+        }
+
         if (!is_string($value) && !is_int($value) && !is_float($value)) {
             $this->error(self::INVALID);
             return false;
@@ -124,7 +123,7 @@ class Regex extends AbstractValidator
         $this->setValue($value);
 
         ErrorHandler::start();
-        $status = preg_match($this->pattern, $value);
+        $status = preg_match($this->getPattern(), $value);
         ErrorHandler::stop();
         if (false === $status) {
             $this->error(self::ERROROUS);

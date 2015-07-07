@@ -74,6 +74,12 @@ class RegexTest extends \PHPUnit_Framework_TestCase
         $validator = new Regex('/');
     }
 
+    public function testBadPatternWithArrayOption()
+    {
+        $this->setExpectedException('Zend\Validator\Exception\InvalidArgumentException', 'Internal error parsing');
+        $validator = new Regex(['pattern' => '/']);
+    }
+
     /**
      * @ZF-4352
      */
@@ -124,5 +130,21 @@ class RegexTest extends \PHPUnit_Framework_TestCase
         $validator = new Regex('//');
         $this->assertAttributeEquals($validator->getOption('messageVariables'),
                                      'messageVariables', $validator);
+    }
+
+    public function testCanBeInstantiatedWithoutOptions()
+    {
+        $validator = new Regex();
+    }
+
+    public function testIsValidThrowsExceptionWithNoOptions()
+    {
+        $this->setExpectedException(
+            'Zend\Validator\Exception\InvalidArgumentException',
+            "Missing option 'pattern'"
+        );
+
+        $validator = new Regex();
+        $validator->isValid(5);
     }
 }

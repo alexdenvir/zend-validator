@@ -56,13 +56,12 @@ class IsInstanceOf extends AbstractValidator
             $options = func_get_args();
 
             $tmpOptions = [];
-            $tmpOptions['className'] = array_shift($options);
+
+            if (!empty($options)) {
+                $tmpOptions['className'] = array_shift($options);
+            }
 
             $options = $tmpOptions;
-        }
-
-        if (!array_key_exists('className', $options)) {
-            throw new Exception\InvalidArgumentException('Missing option "className"');
         }
 
         parent::__construct($options);
@@ -98,6 +97,10 @@ class IsInstanceOf extends AbstractValidator
      */
     public function isValid($value)
     {
+        if (is_null($this->getClassName())) {
+            throw new Exception\InvalidArgumentException('Missing option "className"');
+        }
+
         if ($value instanceof $this->className) {
             return true;
         }

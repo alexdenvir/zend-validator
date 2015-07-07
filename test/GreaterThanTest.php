@@ -122,4 +122,20 @@ class GreaterThanTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($message['notGreaterThanInclusive'], "The input is not greater or equal than '10'");
         }
     }
+
+    public function testCanBeInstantiatedWithoutOptions()
+    {
+        $validator = new GreaterThan();
+    }
+
+    public function testIsValidThrowsExceptionWithNoOptions()
+    {
+        $this->setExpectedException(
+            'Zend\Validator\Exception\InvalidArgumentException',
+            "Missing option 'min'"
+        );
+
+        $validator = new GreaterThan();
+        $validator->isValid(5);
+    }
 }

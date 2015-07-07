@@ -44,8 +44,8 @@ class Between extends AbstractValidator
      */
     protected $options = [
         'inclusive' => true,  // Whether to do inclusive comparisons, allowing equivalence to min and/or max
-        'min'       => 0,
-        'max'       => PHP_INT_MAX,
+        'min'       => null,
+        'max'       => null,
     ];
 
     /**
@@ -66,7 +66,13 @@ class Between extends AbstractValidator
         }
         if (!is_array($options)) {
             $options = func_get_args();
-            $temp['min'] = array_shift($options);
+
+            $temp = [];
+
+            if (!empty($options)) {
+                $temp['min'] = array_shift($options);
+            }
+
             if (!empty($options)) {
                 $temp['max'] = array_shift($options);
             }
@@ -76,12 +82,6 @@ class Between extends AbstractValidator
             }
 
             $options = $temp;
-        }
-
-        if (count($options) !== 2
-            && (!array_key_exists('min', $options) || !array_key_exists('max', $options))
-        ) {
-            throw new Exception\InvalidArgumentException("Missing option. 'min' and 'max' have to be given");
         }
 
         parent::__construct($options);
@@ -163,6 +163,10 @@ class Between extends AbstractValidator
     public function isValid($value)
     {
         $this->setValue($value);
+
+        if (is_null($this->getMin()) || is_null($this->getMax())) {
+            throw new Exception\InvalidArgumentException("Missing option. 'min' and 'max' have to be given");
+        }
 
         if ($this->getInclusive()) {
             if ($this->getMin() > $value || $value > $this->getMax()) {

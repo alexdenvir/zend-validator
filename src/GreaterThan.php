@@ -64,7 +64,12 @@ class GreaterThan extends AbstractValidator
         }
         if (!is_array($options)) {
             $options = func_get_args();
-            $temp['min'] = array_shift($options);
+
+            $temp = [];
+
+            if (!empty($options)) {
+                $temp['min'] = array_shift($options);
+            }
 
             if (!empty($options)) {
                 $temp['inclusive'] = array_shift($options);
@@ -73,16 +78,9 @@ class GreaterThan extends AbstractValidator
             $options = $temp;
         }
 
-        if (!array_key_exists('min', $options)) {
-            throw new Exception\InvalidArgumentException("Missing option 'min'");
-        }
-
         if (!array_key_exists('inclusive', $options)) {
             $options['inclusive'] = false;
         }
-
-        $this->setMin($options['min'])
-             ->setInclusive($options['inclusive']);
 
         parent::__construct($options);
     }
@@ -141,13 +139,17 @@ class GreaterThan extends AbstractValidator
     {
         $this->setValue($value);
 
-        if ($this->inclusive) {
-            if ($this->min > $value) {
+        if (is_null($this->getMin())) {
+            throw new Exception\InvalidArgumentException("Missing option 'min'");
+        }
+
+        if ($this->getInclusive()) {
+            if ($this->getMin() > $value) {
                 $this->error(self::NOT_GREATER_INCLUSIVE);
                 return false;
             }
         } else {
-            if ($this->min >= $value) {
+            if ($this->getMin() >= $value) {
                 $this->error(self::NOT_GREATER);
                 return false;
             }

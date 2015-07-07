@@ -94,4 +94,20 @@ class LessThanTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($validator->getOption('messageVariables'),
                                      'messageVariables', $validator);
     }
+
+    public function testCanBeInstantiatedWithoutOptions()
+    {
+        $validator = new LessThan();
+    }
+
+    public function testIsValidThrowsExceptionWithNoOptions()
+    {
+        $this->setExpectedException(
+            'Zend\Validator\Exception\InvalidArgumentException',
+            "Missing option 'max'"
+        );
+
+        $validator = new LessThan();
+        $validator->isValid(5);
+    }
 }

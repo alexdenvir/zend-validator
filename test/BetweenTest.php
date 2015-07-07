@@ -116,7 +116,11 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
             "Missing option. 'min' and 'max' have to be given"
         );
 
-        new Between($args);
+        $value = 3;
+
+        $validator = new Between($args);
+
+        $validator->isValid($value);
     }
 
     public function constructBetweenValidatorInvalidDataProvider()
@@ -129,5 +133,21 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
                 ['max' => 5],
             ],
         ];
+    }
+
+    public function testCanBeInstantiatedWithoutOptions()
+    {
+        $validator = new Between();
+    }
+
+    public function testIsValidThrowsExceptionWithNoOptions()
+    {
+        $this->setExpectedException(
+            'Zend\Validator\Exception\InvalidArgumentException',
+            "Missing option. 'min' and 'max' have to be given"
+        );
+
+        $validator = new Between();
+        $validator->isValid(5);
     }
 }
