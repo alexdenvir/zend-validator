@@ -97,7 +97,7 @@ class IsInstanceOf extends AbstractValidator
      */
     public function isValid($value)
     {
-        if (is_null($this->getClassName())) {
+        if ($this->getClassName() === null) {
             throw new Exception\InvalidArgumentException('Missing option "className"');
         }
 

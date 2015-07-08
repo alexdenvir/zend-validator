@@ -164,7 +164,7 @@ class Between extends AbstractValidator
     {
         $this->setValue($value);
 
-        if (is_null($this->getMin()) || is_null($this->getMax())) {
+        if ($this->getMin() === null || $this->getMax() === null) {
             throw new Exception\InvalidArgumentException("Missing option. 'min' and 'max' have to be given");
         }
 

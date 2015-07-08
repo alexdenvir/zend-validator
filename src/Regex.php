@@ -111,7 +111,7 @@ class Regex extends AbstractValidator
      */
     public function isValid($value)
     {
-        if (is_null($this->getPattern())) {
+        if ($this->getPattern() === null) {
             throw new Exception\InvalidArgumentException("Missing option 'pattern'");
         }
 

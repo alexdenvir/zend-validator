@@ -139,7 +139,7 @@ class GreaterThan extends AbstractValidator
     {
         $this->setValue($value);
 
-        if (is_null($this->getMin())) {
+        if ($this->getMin() === null) {
             throw new Exception\InvalidArgumentException("Missing option 'min'");
         }
 

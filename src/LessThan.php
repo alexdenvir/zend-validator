@@ -140,7 +140,7 @@ class LessThan extends AbstractValidator
      */
     public function isValid($value)
     {
-        if (is_null($this->getMax())) {
+        if ($this->getMax() === null) {
             throw new Exception\InvalidArgumentException("Missing option 'max'");
         }
 
